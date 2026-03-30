@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preethi MB — Geospatial Analyst</title>
+<meta name="description" content="Geospatial analyst specialising in conservation and carbon monitoring. Writing, projects, and research.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --forest:    #1a2e1e;
+    --canopy:    #2d4a32;
+    --moss:      #4a7c59;
+    --sage:      #8ab89a;
+    --mist:      #d6e8dc;
+    --paper:     #f4f0e8;
+    --ink:       #1c1c1a;
+    --ink-soft:  #4a4a45;
+    --ink-faint: #8a8a82;
+    --accent:    #c8622a;
+    --accent-lt: #f0d5c4;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.2rem 4rem;
+    background: var(--paper);
+    border-bottom: 1px solid var(--mist);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    color: var(--forest);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+  }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--moss); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 64px;
+  }
+  .hero-left {
+    background: var(--forest);
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 6rem 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-left::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 80% 20%, var(--canopy) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 1.5rem;
+  }
+  .hero-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 4vw, 4rem);
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 0.4rem;
+  }
+  .hero-name em {
+    font-style: italic;
+    color: var(--sage);
+  }
+  .hero-title {
+    font-size: 1rem;
+    font-weight: 300;
+    color: var(--mist);
+    margin-bottom: 2.5rem;
+    letter-spacing: 0.04em;
+  }
+  .hero-desc {
+    font-size: 0.95rem;
+    color: var(--sage);
+    line-height: 1.8;
+    max-width: 380px;
+    margin-bottom: 3rem;
+  }
+  .hero-links { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn {
+    display: inline-block;
+    padding: 0.65rem 1.5rem;
+    border-radius: 2px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .btn-primary { background: var(--accent); color: #fff; border: 1px solid var(--accent); }
+  .btn-primary:hover { background: #b05520; }
+  .btn-outline { background: transparent; color: var(--mist); border: 1px solid var(--sage); }
+  .btn-outline:hover { background: var(--canopy); }
+
+  .hero-right {
+    background: var(--mist);
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    padding: 6rem 4rem;
+    gap: 1.5rem;
+  }
+  .stat-card {
+    background: #fff;
+    border: 1px solid var(--mist);
+    border-left: 3px solid var(--moss);
+    padding: 1.2rem 1.8rem;
+    width: 100%;
+    max-width: 320px;
+    animation: slideIn 0.6s ease both;
+  }
+  .stat-card:nth-child(2) { animation-delay: 0.1s; margin-left: 2rem; }
+  .stat-card:nth-child(3) { animation-delay: 0.2s; }
+  .stat-card:nth-child(4) { animation-delay: 0.3s; margin-left: 2rem; }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  .stat-label {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--moss);
+    margin-bottom: 0.3rem;
+  }
+  .stat-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--forest);
+  }
+
+  /* ── SECTIONS ── */
+  section { padding: 6rem 4rem; max-width: 1100px; margin: 0 auto; }
+  .section-label {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--moss);
+    margin-bottom: 0.75rem;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3vw, 2.4rem);
+    color: var(--forest);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+  .section-intro {
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    max-width: 560px;
+    margin-bottom: 3rem;
+    line-height: 1.8;
+  }
+  .divider {
+    width: 48px; height: 2px;
+    background: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  /* ── ABOUT ── */
+  #about { background: #fff; max-width: 100%; padding: 6rem 0; }
+  .about-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: start;
+  }
+  .about-text p { color: var(--ink-soft); margin-bottom: 1.2rem; font-size: 0.97rem; }
+  .skills-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+  .skill-tag {
+    padding: 0.35rem 0.85rem;
+    background: var(--mist);
+    color: var(--canopy);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    border-radius: 2px;
+  }
+  .about-highlights { display: flex; flex-direction: column; gap: 1.5rem; }
+  .highlight {
+    padding: 1.5rem;
+    border: 1px solid var(--mist);
+    border-top: 3px solid var(--moss);
+    background: var(--paper);
+  }
+  .highlight-icon { font-size: 1.5rem; margin-bottom: 0.6rem; }
+  .highlight h4 {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--forest);
+    margin-bottom: 0.4rem;
+    letter-spacing: 0.04em;
+  }
+  .highlight p { font-size: 0.82rem; color: var(--ink-faint); line-height: 1.6; }
+
+  /* ── ARTICLES ── */
+  #articles { background: var(--paper); max-width: 100%; padding: 6rem 0; }
+  .articles-inner { max-width: 1100px; margin: 0 auto; padding: 0 4rem; }
+  .articles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+  .article-card {
+    background: #fff;
+    border: 1px solid var(--mist);
+    padding: 2rem;
+    text-decoration: none;
+    display: flex; flex-direction: column;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .article-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--moss);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .article-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(26,46,30,0.08); }
+  .article-card:hover::before { transform: scaleX(1); }
+  .article-tag {
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--moss);
+    margin-bottom: 0.75rem;
+  }
+  .article-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    color: var(--forest);
+    line-height: 1.35;
+    margin-bottom: 0.75rem;
+  }
+  .article-excerpt {
+    font-size: 0.82rem;
+    color: var(--ink-faint);
+    line-height: 1.7;
+    flex: 1;
+    margin-bottom: 1.5rem;
+  }
+  .article-meta {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+    letter-spacing: 0.04em;
+    border-top: 1px solid var(--mist);
+    padding-top: 1rem;
+  }
+  .read-link { color: var(--accent); font-weight: 500; }
+
+  /* ── PROJECTS ── */
+  #projects { background: var(--forest); max-width: 100%; padding: 6rem 0; }
+  #projects .section-label { color: var(--sage); }
+  #projects .section-title { color: #fff; }
+  #projects .section-intro { color: var(--mist); }
+  .projects-inner { max-width: 1100px; margin: 0 auto; padding: 0 4rem; }
+  .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.2rem; }
+  .project-card {
+    background: var(--canopy);
+    border: 1px solid rgba(138,184,154,0.15);
+    padding: 2rem;
+    text-decoration: none;
+    display: flex; flex-direction: column;
+    transition: background 0.2s;
+    position: relative;
+  }
+  .project-card:hover { background: rgba(74,124,89,0.4); }
+  .project-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    color: rgba(138,184,154,0.25);
+    line-height: 1;
+    margin-bottom: 0.75rem;
+  }
+  .project-title {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 0.6rem;
+    line-height: 1.4;
+  }
+  .project-desc { font-size: 0.82rem; color: var(--sage); line-height: 1.7; flex: 1; margin-bottom: 1.5rem; }
+  .project-tech { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .tech-tag {
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    padding: 0.25rem 0.6rem;
+    background: rgba(138,184,154,0.12);
+    color: var(--sage);
+    border: 1px solid rgba(138,184,154,0.2);
+    border-radius: 2px;
+  }
+
+  /* ── CONTACT ── */
+  #contact { text-align: center; padding: 6rem 4rem; max-width: 700px; }
+  #contact .section-title { margin-bottom: 1rem; }
+  #contact p { color: var(--ink-soft); margin-bottom: 2.5rem; }
+  .contact-links { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--forest);
+    color: var(--sage);
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1.2rem; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-left { padding: 4rem 2rem; }
+    .hero-right { display: none; }
+    .about-inner { grid-template-columns: 1fr; gap: 2rem; padding: 0 1.5rem; }
+    section { padding: 4rem 1.5rem; }
+    .articles-inner, .projects-inner { padding: 0 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">Preethi MB</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#articles">Writing</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">Geospatial Analyst</p>
+    <h1 class="hero-name">Preethi<br><em>MB</em></h1>
+    <p class="hero-title">Conservation · Carbon Monitoring · Remote Sensing</p>
+    <p class="hero-desc">
+      I work at the intersection of geospatial analysis and environmental science —
+      mapping ecosystems, quantifying carbon, and building tools for conservation decision-making.
+    </p>
+    <div class="hero-links">
+      <a href="#articles" class="btn btn-primary">Read my writing</a>
+      <a href="#projects" class="btn btn-outline">View projects</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="stat-card">
+      <div class="stat-label">Focus area</div>
+      <div class="stat-value">California Ecosystems & Carbon</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Methods</div>
+      <div class="stat-value">LiDAR · SAR · Multispectral</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Tools</div>
+      <div class="stat-value">GEE · QGIS · Python · R</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Currently exploring</div>
+      <div class="stat-value">Blue Carbon & Wetland Monitoring</div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div id="about">
+  <div class="about-inner">
+    <div class="about-text">
+      <div class="section-label">About me</div>
+      <div class="divider"></div>
+      <h2 class="section-title">Mapping the living world</h2>
+      <p>
+        I'm a geospatial analyst focused on conservation and carbon monitoring — using remote sensing,
+        spatial analysis, and field data to understand ecosystems at scale.
+      </p>
+      <p>
+        My work spans forest biomass estimation, wetland carbon dynamics, habitat connectivity modelling,
+        and disturbance analysis. I'm particularly interested in California's diverse ecosystems
+        and how geospatial tools can support both carbon markets and conservation planning.
+      </p>
+      <p>
+        <!-- Add a line about your background, education, or current role here -->
+        Currently building expertise in blue carbon systems and the intersection of regulatory
+        frameworks (CARB) with remote sensing verification.
+      </p>
+      <div class="skills-grid">
+        <span class="skill-tag">Google Earth Engine</span>
+        <span class="skill-tag">QGIS / ArcGIS</span>
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">R</span>
+        <span class="skill-tag">LiDAR</span>
+        <span class="skill-tag">SAR / InSAR</span>
+        <span class="skill-tag">Carbon accounting</span>
+        <span class="skill-tag">Habitat modelling</span>
+        <span class="skill-tag">NDVI / vegetation indices</span>
+        <span class="skill-tag">Spatial statistics</span>
+      </div>
+    </div>
+    <div class="about-highlights">
+      <div class="highlight">
+        <div class="highlight-icon">🌲</div>
+        <h4>Forest carbon</h4>
+        <p>Biomass estimation, fire disturbance flux, old-growth monitoring using LiDAR and multispectral data.</p>
+      </div>
+      <div class="highlight">
+        <div class="highlight-icon">🌊</div>
+        <h4>Wetland & blue carbon</h4>
+        <p>Tidal marsh mapping, Delta peat carbon, subsidence monitoring via InSAR.</p>
+      </div>
+      <div class="highlight">
+        <div class="highlight-icon">🗺️</div>
+        <h4>Connectivity analysis</h4>
+        <p>Habitat corridor mapping, climate-adaptive conservation planning, 30x30 spatial prioritisation.</p>
+      </div>
+      <div class="highlight">
+        <div class="highlight-icon">📡</div>
+        <h4>Remote sensing</h4>
+        <p>Multi-source satellite data processing, time-series analysis, land cover classification.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ARTICLES -->
+<div id="articles">
+  <div class="articles-inner">
+    <div class="section-label">Writing</div>
+    <div class="divider"></div>
+    <h2 class="section-title">Articles & analysis</h2>
+    <p class="section-intro">
+      Freely available — no paywall. Writing on geospatial methods, ecosystem science,
+      and conservation practice.
+    </p>
+    <div class="articles-grid">
+
+      <!-- ARTICLE CARD TEMPLATE — duplicate this block for each article -->
+      <a href="articles/article-1.html" class="article-card">
+        <div class="article-tag">Carbon monitoring</div>
+        <div class="article-title">Your First Article Title Goes Here</div>
+        <div class="article-excerpt">
+          A 2–3 sentence summary of what this article covers. Write something
+          that makes a recruiter or collaborator want to click through and read more.
+        </div>
+        <div class="article-meta">
+          <span>Month Year</span>
+          <span class="read-link">Read →</span>
+        </div>
+      </a>
+
+      <a href="articles/article-2.html" class="article-card">
+        <div class="article-tag">Conservation</div>
+        <div class="article-title">Your Second Article Title Goes Here</div>
+        <div class="article-excerpt">
+          A short, compelling description of the article. Focus on what the reader
+          will learn or take away from it.
+        </div>
+        <div class="article-meta">
+          <span>Month Year</span>
+          <span class="read-link">Read →</span>
+        </div>
+      </a>
+
+      <a href="articles/article-3.html" class="article-card">
+        <div class="article-tag">Remote sensing</div>
+        <div class="article-title">Your Third Article Title Goes Here</div>
+        <div class="article-excerpt">
+          Describe the problem you tackled, the method you used, or the insight
+          you found. Keep it punchy.
+        </div>
+        <div class="article-meta">
+          <span>Month Year</span>
+          <span class="read-link">Read →</span>
+        </div>
+      </a>
+      <!-- END ARTICLE CARD TEMPLATE -->
+
+    </div>
+  </div>
+</div>
+
+<!-- PROJECTS -->
+<div id="projects">
+  <div class="projects-inner">
+    <div class="section-label">Projects</div>
+    <div class="divider" style="background:var(--sage)"></div>
+    <h2 class="section-title">Selected work</h2>
+    <p class="section-intro">Geospatial projects in conservation, carbon, and remote sensing.</p>
+    <div class="projects-grid">
+
+      <!-- PROJECT CARD TEMPLATE — duplicate for each project -->
+      <a href="https://github.com/PreethiMB" class="project-card">
+        <div class="project-num">01</div>
+        <div class="project-title">Project Name Goes Here</div>
+        <div class="project-desc">
+          What did you build or analyse? What was the scale, the data source,
+          the outcome? One or two sentences is enough.
+        </div>
+        <div class="project-tech">
+          <span class="tech-tag">Google Earth Engine</span>
+          <span class="tech-tag">Python</span>
+          <span class="tech-tag">LiDAR</span>
+        </div>
+      </a>
+
+      <a href="https://github.com/PreethiMB" class="project-card">
+        <div class="project-num">02</div>
+        <div class="project-title">Second Project Name</div>
+        <div class="project-desc">
+          Brief description of the project, what ecosystem or region it covers,
+          and what methods or tools were central to it.
+        </div>
+        <div class="project-tech">
+          <span class="tech-tag">QGIS</span>
+          <span class="tech-tag">R</span>
+          <span class="tech-tag">SAR</span>
+        </div>
+      </a>
+
+      <a href="https://github.com/PreethiMB" class="project-card">
+        <div class="project-num">03</div>
+        <div class="project-title">Third Project Name</div>
+        <div class="project-desc">
+          Another project description. Link each card to the actual GitHub repo
+          once you have them.
+        </div>
+        <div class="project-tech">
+          <span class="tech-tag">InSAR</span>
+          <span class="tech-tag">Python</span>
+        </div>
+      </a>
+      <!-- END PROJECT CARD TEMPLATE -->
+
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-label">Contact</div>
+  <div class="divider" style="margin:0.75rem auto 1rem"></div>
+  <h2 class="section-title">Get in touch</h2>
+  <p>Open to collaborations, research conversations, and opportunities in conservation geospatial work.</p>
+  <div class="contact-links">
+    <a href="https://github.com/PreethiMB" class="btn btn-primary">GitHub</a>
+    <a href="https://www.linkedin.com/in/YOUR-LINKEDIN" class="btn btn-outline" style="color:var(--moss);border-color:var(--moss)">LinkedIn</a>
+    <a href="mailto:YOUR-EMAIL@example.com" class="btn btn-outline" style="color:var(--moss);border-color:var(--moss)">Email</a>
+  </div>
+</section>
+
+<footer>
+  <p>Preethi MB · Geospatial Analyst · Conservation & Carbon Monitoring</p>
+</footer>
+
+</body>
+</html>
