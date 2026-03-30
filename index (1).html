@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Preethi MB — Geospatial Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f7f5f0; --ink: #1a1a18; --muted: #7a7870;
+      --accent: #2d6a4f; --accent-light: #d8ede3; --line: #e0ddd6;
+      --serif: 'DM Serif Display', Georgia, serif;
+      --sans: 'DM Sans', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-weight: 300; line-height: 1.7; overflow-x: hidden; }
+
+    /* NAV */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.3rem 4rem; background: rgba(247,245,240,0.9); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
+    .nav-logo { font-family: var(--serif); font-size: 1.1rem; color: var(--ink); text-decoration: none; }
+    .nav-links { display: flex; gap: 1.8rem; list-style: none; }
+    .nav-links a { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+
+    /* HERO */
+    .hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; padding-top: 80px; }
+    .hero-left { display: flex; flex-direction: column; justify-content: center; padding: 6rem 4rem; border-right: 1px solid var(--line); }
+    .hero-tag { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.6rem; }
+    .hero-tag::before { content: ''; display: inline-block; width: 24px; height: 1px; background: var(--accent); }
+    .hero-name { font-family: var(--serif); font-size: clamp(3rem, 5vw, 5.5rem); line-height: 1.08; letter-spacing: -0.02em; margin-bottom: 1.8rem; }
+    .hero-name em { font-style: italic; color: var(--accent); }
+    .hero-bio { font-size: 1rem; color: var(--muted); max-width: 420px; margin-bottom: 2.5rem; }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--accent); color: #fff; padding: 0.8rem 1.8rem; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; text-decoration: none; border-radius: 2px; transition: background 0.2s, transform 0.2s; }
+    .btn-primary:hover { background: #235c42; transform: translateY(-2px); }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 0.5rem; background: transparent; color: var(--ink); padding: 0.8rem 1.8rem; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; text-decoration: none; border-radius: 2px; border: 1px solid var(--line); transition: border-color 0.2s, transform 0.2s; }
+    .btn-secondary:hover { border-color: var(--ink); transform: translateY(-2px); }
+    .hero-right { display: flex; align-items: center; justify-content: center; padding: 4rem; overflow: hidden; }
+    .map-art { width: 100%; max-width: 420px; aspect-ratio: 1; }
+    .map-art svg { width: 100%; height: 100%; }
+
+    /* SHARED */
+    section { padding: 7rem 4rem; }
+    .section-label { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.6rem; }
+    .section-label::before { content: ''; display: inline-block; width: 24px; height: 1px; background: var(--accent); }
+    .section-title { font-family: var(--serif); font-size: clamp(2rem, 3.5vw, 3rem); line-height: 1.15; margin-bottom: 3rem; }
+
+    /* ABOUT */
+    #about { border-top: 1px solid var(--line); display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start; }
+    .about-text p { color: var(--muted); margin-bottom: 1.2rem; font-size: 0.97rem; }
+    .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-top: 1rem; }
+    .skill-item { padding: 0.9rem 0; border-bottom: 1px solid var(--line); font-size: 0.84rem; font-weight: 500; color: var(--ink); display: flex; align-items: center; gap: 0.5rem; }
+    .skill-item::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+    .about-right h3 { font-family: var(--serif); font-size: 1.4rem; margin-bottom: 1.5rem; }
+
+    /* PROJECTS */
+    #projects { border-top: 1px solid var(--line); background: var(--ink); color: var(--bg); }
+    #projects .section-label { color: #74b49b; }
+    #projects .section-label::before { background: #74b49b; }
+    #projects .section-title { color: var(--bg); }
+    .projects-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.08); }
+    .project-card { background: var(--ink); padding: 2.5rem; transition: background 0.25s; }
+    .project-card:hover { background: #252521; }
+    .project-num { font-family: var(--serif); font-size: 2.5rem; font-style: italic; color: rgba(255,255,255,0.1); display: block; margin-bottom: 1rem; }
+    .project-tag { font-size: 0.68rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: #74b49b; margin-bottom: 0.8rem; }
+    .project-title { font-family: var(--serif); font-size: 1.3rem; color: var(--bg); margin-bottom: 0.8rem; line-height: 1.25; }
+    .project-desc { font-size: 0.85rem; color: rgba(247,245,240,0.5); line-height: 1.65; }
+    .project-link { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 1.5rem; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #74b49b; text-decoration: none; transition: gap 0.2s; }
+    .project-link:hover { gap: 0.7rem; }
+
+    /* WRITING */
+    #writing { border-top: 1px solid var(--line); }
+    .section-intro { color: var(--muted); font-size: 0.95rem; max-width: 540px; margin-top: -1.5rem; margin-bottom: 3rem; }
+    .articles-list { display: flex; flex-direction: column; }
+    .article-item { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 2rem; padding: 1.8rem 0; border-bottom: 1px solid var(--line); text-decoration: none; color: inherit; }
+    .article-item:first-child { border-top: 1px solid var(--line); }
+    .article-item:hover .article-title { color: var(--accent); }
+    .article-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.4rem; }
+    .article-tag { font-size: 0.68rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); background: var(--accent-light); padding: 0.2rem 0.6rem; border-radius: 2px; }
+    .article-date { font-size: 0.75rem; color: var(--muted); }
+    .article-title { font-family: var(--serif); font-size: 1.25rem; line-height: 1.3; transition: color 0.2s; }
+    .article-desc { font-size: 0.85rem; color: var(--muted); margin-top: 0.4rem; }
+    .article-arrow { font-size: 1.2rem; color: var(--muted); transition: transform 0.2s, color 0.2s; flex-shrink: 0; }
+    .article-item:hover .article-arrow { transform: translate(4px,-4px); color: var(--accent); }
+    .writing-cta { margin-top: 2.5rem; }
+
+    /* PHOTOS */
+    #photos { border-top: 1px solid var(--line); background: #f2f0ea; }
+    .masonry { columns: 3; column-gap: 1rem; }
+    .masonry-item { break-inside: avoid; margin-bottom: 1rem; position: relative; overflow: hidden; border-radius: 2px; cursor: pointer; }
+    .masonry-item img { width: 100%; display: block; transition: transform 0.5s ease; filter: saturate(0.9); }
+    .masonry-item:hover img { transform: scale(1.04); filter: saturate(1.1); }
+    .photo-placeholder { width: 100%; display: block; }
+    .masonry-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(26,26,24,0.65) 0%, transparent 55%); opacity: 0; transition: opacity 0.3s; display: flex; align-items: flex-end; padding: 1rem; }
+    .masonry-item:hover .masonry-overlay { opacity: 1; }
+    .masonry-caption { font-size: 0.78rem; color: rgba(247,245,240,0.9); font-weight: 400; letter-spacing: 0.03em; }
+
+    /* RESUME */
+    #resume { border-top: 1px solid var(--line); display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
+    .resume-text p { color: var(--muted); font-size: 0.97rem; margin-bottom: 1.5rem; }
+    .resume-highlights { list-style: none; margin-bottom: 2rem; }
+    .resume-highlights li { font-size: 0.88rem; color: var(--ink); padding: 0.7rem 0; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 0.7rem; }
+    .resume-highlights li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+    .resume-card { background: var(--ink); color: var(--bg); padding: 3rem; border-radius: 4px; display: flex; flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+    .resume-card-title { font-family: var(--serif); font-size: 1.8rem; line-height: 1.2; }
+    .resume-card-title em { font-style: italic; color: #74b49b; }
+    .resume-card p { font-size: 0.85rem; color: rgba(247,245,240,0.55); line-height: 1.6; }
+    .btn-download { display: inline-flex; align-items: center; gap: 0.6rem; background: #74b49b; color: var(--ink); padding: 0.85rem 1.8rem; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; text-decoration: none; border-radius: 2px; transition: background 0.2s, transform 0.2s; }
+    .btn-download:hover { background: #5fa386; transform: translateY(-2px); }
+
+    /* CONTACT */
+    #contact { border-top: 1px solid var(--line); display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start; }
+    .contact-sub { color: var(--muted); font-size: 0.95rem; margin-bottom: 2.5rem; max-width: 380px; }
+    .contact-item { display: flex; align-items: flex-start; gap: 1rem; padding: 1.2rem 0; border-bottom: 1px solid var(--line); }
+    .contact-icon { width: 36px; height: 36px; background: var(--accent-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .contact-icon svg { width: 16px; height: 16px; stroke: var(--accent); }
+    .contact-detail { display: flex; flex-direction: column; }
+    .contact-label { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+    .contact-value { font-size: 0.92rem; color: var(--ink); }
+    .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-group label { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+    .form-group input, .form-group textarea { background: transparent; border: 1px solid var(--line); padding: 0.75rem 1rem; font-family: var(--sans); font-size: 0.9rem; color: var(--ink); outline: none; transition: border-color 0.2s; border-radius: 2px; resize: vertical; }
+    .form-group input:focus, .form-group textarea:focus { border-color: var(--accent); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .btn-submit { margin-top: 0.5rem; background: var(--accent); color: #fff; border: none; padding: 0.9rem 2rem; font-family: var(--sans); font-size: 0.82rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; border-radius: 2px; transition: background 0.2s, transform 0.2s; align-self: flex-start; }
+    .btn-submit:hover { background: #235c42; transform: translateY(-2px); }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--line); padding: 2rem 4rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; color: var(--muted); }
+
+    /* LIGHTBOX */
+    .lightbox { display: none; position: fixed; inset: 0; z-index: 999; background: rgba(26,26,24,0.95); align-items: center; justify-content: center; }
+    .lightbox.open { display: flex; }
+    .lightbox img { max-width: 88vw; max-height: 88vh; object-fit: contain; border-radius: 2px; }
+    .lightbox-close { position: absolute; top: 1.5rem; right: 2rem; color: rgba(247,245,240,0.7); font-size: 2.5rem; cursor: pointer; font-weight: 300; line-height: 1; transition: color 0.2s; }
+    .lightbox-close:hover { color: #fff; }
+
+    /* ANIMATIONS */
+    .fade-in { opacity: 0; transform: translateY(22px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .fade-in.visible { opacity: 1; transform: none; }
+
+    /* RESPONSIVE */
+    @media (max-width: 960px) {
+      nav { padding: 1.2rem 1.5rem; }
+      .nav-links { gap: 1rem; }
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .hero-left { padding: 5rem 1.5rem 4rem; border-right: none; }
+      section { padding: 4rem 1.5rem; }
+      #about, #resume, #contact { grid-template-columns: 1fr; gap: 3rem; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .masonry { columns: 2; }
+      .article-item { grid-template-columns: 1fr; gap: 0.4rem; }
+      .article-arrow { display: none; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; padding: 1.5rem; }
+    }
+    @media (max-width: 520px) { .masonry { columns: 1; } }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Preethi MB</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#writing">Writing</a></li>
+    <li><a href="#photos">Photos</a></li>
+    <li><a href="#resume">Résumé</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <span class="hero-tag">Geospatial Specialist</span>
+    <h1 class="hero-name">Mapping the<br><em>world</em> through<br>data.</h1>
+    <p class="hero-bio">I work at the intersection of geography, data, and technology — turning complex spatial information into clear, meaningful insights.</p>
+    <div class="hero-actions">
+      <a href="#projects" class="btn-primary">View my work →</a>
+      <!-- ✏️ After uploading your PDF to GitHub, rename it to resume.pdf -->
+      <a href="resume.pdf" class="btn-secondary" download>↓ Download résumé</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="map-art">
+      <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="0" y1="80" x2="400" y2="80" stroke="#e0ddd6" stroke-width="1"/>
+        <line x1="0" y1="160" x2="400" y2="160" stroke="#e0ddd6" stroke-width="1"/>
+        <line x1="0" y1="240" x2="400" y2="240" stroke="#e0ddd6" stroke-width="1"/>
+        <line x1="0" y1="320" x2="400" y2="320" stroke="#e0ddd6" stroke-width="1"/>
+        <line x1="80" y1="0" x2="80" y2="400" stroke="#e0ddd6" stroke-width="1"/>
+        <line x1="160" y1="0" x2="160" y2="400" stroke="#e0ddd6" stroke-width="1"/>
+        <line x1="240" y1="0" x2="240" y2="400" stroke="#e0ddd6" stroke-width="1"/>
+        <line x1="320" y1="0" x2="320" y2="400" stroke="#e0ddd6" stroke-width="1"/>
+        <ellipse cx="200" cy="200" rx="160" ry="100" stroke="#d4cfc5" stroke-width="1" stroke-dasharray="4 4"/>
+        <ellipse cx="200" cy="200" rx="120" ry="72" stroke="#c8c3b8" stroke-width="1" stroke-dasharray="4 4"/>
+        <ellipse cx="200" cy="200" rx="80" ry="48" stroke="#bdb8ac" stroke-width="1" stroke-dasharray="4 4"/>
+        <path d="M110,180 Q140,120 200,115 Q260,110 290,160 Q320,200 290,250 Q260,295 200,290 Q140,285 110,240 Q90,210 110,180Z" fill="#d8ede3" stroke="#2d6a4f" stroke-width="1.5"/>
+        <path d="M145,190 Q168,160 200,158 Q232,156 252,185 Q265,205 248,228 Q228,250 200,248 Q168,246 150,225 Q138,210 145,190Z" fill="none" stroke="#2d6a4f" stroke-width="1" stroke-dasharray="3 3" opacity="0.5"/>
+        <circle cx="200" cy="200" r="8" fill="#2d6a4f"/>
+        <circle cx="200" cy="200" r="3" fill="#f7f5f0"/>
+        <circle cx="200" cy="200" r="18" stroke="#2d6a4f" stroke-width="1" opacity="0.4"/>
+        <circle cx="200" cy="200" r="30" stroke="#2d6a4f" stroke-width="0.8" opacity="0.2"/>
+        <text x="10" y="76" font-family="DM Sans,sans-serif" font-size="9" fill="#b0ad9e">40°N</text>
+        <text x="10" y="156" font-family="DM Sans,sans-serif" font-size="9" fill="#b0ad9e">20°N</text>
+        <text x="10" y="244" font-family="DM Sans,sans-serif" font-size="9" fill="#b0ad9e">20°S</text>
+        <text x="76" y="394" font-family="DM Sans,sans-serif" font-size="9" fill="#b0ad9e">80°W</text>
+        <text x="156" y="394" font-family="DM Sans,sans-serif" font-size="9" fill="#b0ad9e">0°</text>
+        <text x="232" y="394" font-family="DM Sans,sans-serif" font-size="9" fill="#b0ad9e">80°E</text>
+        <circle cx="140" cy="155" r="3" fill="#2d6a4f" opacity="0.5"/>
+        <circle cx="270" cy="175" r="2.5" fill="#2d6a4f" opacity="0.4"/>
+        <circle cx="165" cy="250" r="3.5" fill="#2d6a4f" opacity="0.35"/>
+        <circle cx="240" cy="240" r="2" fill="#2d6a4f" opacity="0.45"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-text fade-in">
+    <span class="section-label">About me</span>
+    <h2 class="section-title">Spatial thinker,<br>data storyteller.</h2>
+    <!-- ✏️ Replace with your own bio -->
+    <p>I'm Preethi, a geospatial professional with a passion for understanding how place shapes everything around us. I use tools like GIS, remote sensing, and spatial analysis to solve real-world problems.</p>
+    <p>From urban planning to environmental monitoring, I love turning raw geographic data into actionable insights — and capturing the beauty of the natural world through photography.</p>
+  </div>
+  <div class="about-right fade-in">
+    <span class="section-label">Skills &amp; tools</span>
+    <h3>What I work with</h3>
+    <div class="skills-grid">
+      <!-- ✏️ Update with your actual skills -->
+      <span class="skill-item">ArcGIS / QGIS</span>
+      <span class="skill-item">Remote Sensing</span>
+      <span class="skill-item">Python (GeoPandas)</span>
+      <span class="skill-item">Spatial Analysis</span>
+      <span class="skill-item">Google Earth Engine</span>
+      <span class="skill-item">Cartography</span>
+      <span class="skill-item">SQL / PostGIS</span>
+      <span class="skill-item">Data Visualization</span>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <span class="section-label">Projects</span>
+  <h2 class="section-title">Selected work.</h2>
+  <div class="projects-grid">
+    <!-- ✏️ Replace with your real projects -->
+    <div class="project-card fade-in">
+      <span class="project-num">01</span>
+      <div class="project-tag">Remote Sensing</div>
+      <div class="project-title">Land Cover Change Detection</div>
+      <p class="project-desc">Analyzed multi-temporal satellite imagery to map deforestation patterns across a 500 km² study area using supervised classification.</p>
+      <a href="#" class="project-link">View project →</a>
+    </div>
+    <div class="project-card fade-in">
+      <span class="project-num">02</span>
+      <div class="project-tag">Urban GIS</div>
+      <div class="project-title">Urban Heat Island Mapping</div>
+      <p class="project-desc">Created high-resolution surface temperature maps to identify urban heat islands and support city-level climate adaptation strategies.</p>
+      <a href="#" class="project-link">View project →</a>
+    </div>
+    <div class="project-card fade-in">
+      <span class="project-num">03</span>
+      <div class="project-tag">Spatial Analysis</div>
+      <div class="project-title">Flood Risk Assessment</div>
+      <p class="project-desc">Built a spatial model integrating elevation data, rainfall, and land use to produce a vulnerability index for flood-prone regions.</p>
+      <a href="#" class="project-link">View project →</a>
+    </div>
+  </div>
+</section>
+
+<!-- WRITING -->
+<section id="writing">
+  <span class="section-label">Writing</span>
+  <h2 class="section-title">From the blog.</h2>
+  <p class="section-intro">I write about geospatial technology, data storytelling, and the places I explore. Published on Medium.</p>
+
+  <div class="articles-list">
+    <!--
+      ✏️ HOW TO FILL IN YOUR MEDIUM ARTICLES:
+      1. Go to your Medium profile → click on an article
+      2. Copy the full URL from the browser bar
+      3. Paste it into href="..." below
+      4. Update the title, tag, date and description for each article
+      Add or remove <a class="article-item"> blocks as needed.
+    -->
+    <a href="https://medium.com/@YOUR_HANDLE/your-article-1" target="_blank" rel="noopener" class="article-item fade-in">
+      <div>
+        <div class="article-meta">
+          <span class="article-tag">GIS</span>
+          <span class="article-date">Month YYYY</span>
+        </div>
+        <div class="article-title">Your First Article Title Here</div>
+        <div class="article-desc">One sentence that describes what the article is about.</div>
+      </div>
+      <span class="article-arrow">↗</span>
+    </a>
+    <a href="https://medium.com/@YOUR_HANDLE/your-article-2" target="_blank" rel="noopener" class="article-item fade-in">
+      <div>
+        <div class="article-meta">
+          <span class="article-tag">Remote Sensing</span>
+          <span class="article-date">Month YYYY</span>
+        </div>
+        <div class="article-title">Your Second Article Title Here</div>
+        <div class="article-desc">One sentence that describes what the article is about.</div>
+      </div>
+      <span class="article-arrow">↗</span>
+    </a>
+    <a href="https://medium.com/@YOUR_HANDLE/your-article-3" target="_blank" rel="noopener" class="article-item fade-in">
+      <div>
+        <div class="article-meta">
+          <span class="article-tag">Spatial Data</span>
+          <span class="article-date">Month YYYY</span>
+        </div>
+        <div class="article-title">Your Third Article Title Here</div>
+        <div class="article-desc">One sentence that describes what the article is about.</div>
+      </div>
+      <span class="article-arrow">↗</span>
+    </a>
+  </div>
+
+  <!-- ✏️ Replace YOUR_HANDLE with your Medium username -->
+  <div class="writing-cta">
+    <a href="https://medium.com/@YOUR_HANDLE" target="_blank" rel="noopener" class="btn-primary">Read all on Medium →</a>
+  </div>
+</section>
+
+<!-- PHOTOS -->
+<section id="photos">
+  <span class="section-label">Photography</span>
+  <h2 class="section-title">Nature through<br>my lens.</h2>
+  <p class="section-intro">A selection of moments from my time outdoors — forests, coastlines, and skies that remind me why I love the natural world.</p>
+
+  <!--
+    ✏️ HOW TO ADD YOUR PHOTOS:
+    1. In your GitHub repo, create a folder called "photos"
+    2. Upload your images there (e.g. forest.jpg, sunset.jpg)
+    3. For each photo, replace the <div class="photo-placeholder"...> block with:
+         <img src="photos/yourfilename.jpg" alt="Brief description" />
+    4. The masonry layout sizes everything automatically — no fixed heights needed!
+    5. Click any photo to open it in the full-screen lightbox viewer.
+  -->
+  <div class="masonry">
+    <div class="masonry-item fade-in">
+      <div class="photo-placeholder" style="height:280px;background:linear-gradient(135deg,#c8d8c0,#a8c4a0)"></div>
+      <div class="masonry-overlay"><span class="masonry-caption">Add your photo here</span></div>
+    </div>
+    <div class="masonry-item fade-in">
+      <div class="photo-placeholder" style="height:200px;background:linear-gradient(135deg,#b8c8d8,#90a8c0)"></div>
+      <div class="masonry-overlay"><span class="masonry-caption">Add your photo here</span></div>
+    </div>
+    <div class="masonry-item fade-in">
+      <div class="photo-placeholder" style="height:340px;background:linear-gradient(135deg,#d8c8a8,#c0a880)"></div>
+      <div class="masonry-overlay"><span class="masonry-caption">Add your photo here</span></div>
+    </div>
+    <div class="masonry-item fade-in">
+      <div class="photo-placeholder" style="height:220px;background:linear-gradient(135deg,#c0d0b8,#98b890)"></div>
+      <div class="masonry-overlay"><span class="masonry-caption">Add your photo here</span></div>
+    </div>
+    <div class="masonry-item fade-in">
+      <div class="photo-placeholder" style="height:300px;background:linear-gradient(135deg,#d0c0b0,#b09878)"></div>
+      <div class="masonry-overlay"><span class="masonry-caption">Add your photo here</span></div>
+    </div>
+    <div class="masonry-item fade-in">
+      <div class="photo-placeholder" style="height:180px;background:linear-gradient(135deg,#b8d0c8,#88b0a8)"></div>
+      <div class="masonry-overlay"><span class="masonry-caption">Add your photo here</span></div>
+    </div>
+    <div class="masonry-item fade-in">
+      <div class="photo-placeholder" style="height:260px;background:linear-gradient(135deg,#c8b8d0,#a098b8)"></div>
+      <div class="masonry-overlay"><span class="masonry-caption">Add your photo here</span></div>
+    </div>
+    <div class="masonry-item fade-in">
+      <div class="photo-placeholder" style="height:310px;background:linear-gradient(135deg,#d8d0b8,#b8a888)"></div>
+      <div class="masonry-overlay"><span class="masonry-caption">Add your photo here</span></div>
+    </div>
+    <div class="masonry-item fade-in">
+      <div class="photo-placeholder" style="height:230px;background:linear-gradient(135deg,#b0c8b8,#88a890)"></div>
+      <div class="masonry-overlay"><span class="masonry-caption">Add your photo here</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- RESUME -->
+<section id="resume">
+  <div class="resume-text fade-in">
+    <span class="section-label">Résumé</span>
+    <h2 class="section-title">Experience &amp;<br>background.</h2>
+    <!-- ✏️ Replace with your own summary -->
+    <p>A brief summary of your professional background, education, and what you bring to the table.</p>
+    <ul class="resume-highlights">
+      <!-- ✏️ Replace with your own highlights -->
+      <li>Your most recent job title / organisation</li>
+      <li>Previous role or key project</li>
+      <li>Degree / university name</li>
+      <li>A certification worth highlighting</li>
+    </ul>
+  </div>
+  <div class="resume-card fade-in">
+    <div class="resume-card-title">Download my<br><em>full résumé.</em></div>
+    <p>Get the complete picture — education, experience, tools, and more in a single PDF.</p>
+    <!--
+      ✏️ HOW TO ADD YOUR RESUME PDF:
+      1. Rename your CV file to exactly: resume.pdf
+      2. Upload it to the ROOT of your GitHub repo (same folder as index.html)
+      3. This button will work automatically!
+    -->
+    <a href="resume.pdf" class="btn-download" download>↓ &nbsp;Download PDF</a>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="fade-in">
+    <span class="section-label">Contact</span>
+    <h2 class="section-title">Let's connect.</h2>
+    <p class="contact-sub">Open to collaborations, research opportunities, and interesting geospatial challenges. Say hello!</p>
+    <!-- ✏️ Update all contact details below -->
+    <div class="contact-item">
+      <div class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+      <div class="contact-detail"><span class="contact-label">Email</span><span class="contact-value">your@email.com</span></div>
+    </div>
+    <div class="contact-item">
+      <div class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg></div>
+      <div class="contact-detail"><span class="contact-label">GitHub</span><span class="contact-value">github.com/PreethiMB</span></div>
+    </div>
+    <div class="contact-item">
+      <div class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></div>
+      <div class="contact-detail"><span class="contact-label">LinkedIn</span><span class="contact-value">linkedin.com/in/preethimb</span></div>
+    </div>
+    <div class="contact-item">
+      <div class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+      <div class="contact-detail"><span class="contact-label">Medium</span><span class="contact-value">medium.com/@YOUR_HANDLE</span></div>
+    </div>
+  </div>
+  <div class="contact-form fade-in">
+    <div class="form-row">
+      <div class="form-group"><label>Name</label><input type="text" placeholder="Your name"/></div>
+      <div class="form-group"><label>Email</label><input type="email" placeholder="your@email.com"/></div>
+    </div>
+    <div class="form-group"><label>Subject</label><input type="text" placeholder="What's this about?"/></div>
+    <div class="form-group"><label>Message</label><textarea rows="5" placeholder="Tell me about your project or idea..."></textarea></div>
+    <button class="btn-submit">Send message →</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2026 Preethi MB</span>
+  <span>Geospatial · Writing · Photography</span>
+  <span>Built with GitHub Pages</span>
+</footer>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <span class="lightbox-close" id="lightboxClose">×</span>
+  <img id="lightboxImg" src="" alt=""/>
+</div>
+
+<script>
+  // Scroll fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        e.target.style.transitionDelay = `${i * 60}ms`;
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Lightbox
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  document.querySelectorAll('.masonry-item img').forEach(img => {
+    img.addEventListener('click', () => { lightboxImg.src = img.src; lightbox.classList.add('open'); });
+  });
+  document.getElementById('lightboxClose').addEventListener('click', () => lightbox.classList.remove('open'));
+  lightbox.addEventListener('click', e => { if (e.target === lightbox) lightbox.classList.remove('open'); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') lightbox.classList.remove('open'); });
+</script>
+</body>
+</html>
